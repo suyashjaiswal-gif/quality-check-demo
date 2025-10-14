@@ -16,8 +16,8 @@ phases:
       - apt-get update -y
       - apt-get install -y unzip wget
       - echo "⬇️ Downloading SonarScanner CLI..."
-      - wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.10.0.3371-linux.zip
-      - unzip -q sonar-scanner-cli-4.10.0.3371-linux.zip
+      #- wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.10.0.3371-linux.zip
+      #- unzip -q sonar-scanner-cli-4.10.0.3371-linux.zip
       - export PATH=$PATH:$(pwd)/sonar-scanner-4.10.0.3371-linux/bin
       - sonar-scanner --version || true
 
