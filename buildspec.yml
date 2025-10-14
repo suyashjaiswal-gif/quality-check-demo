@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    SONAR_TOKEN: "/project/sonar/token:SONAR_TOKEN"
+  variables:
+    SONAR_PROJECT_KEY: "irrigation-iot-ai"
+    SONAR_HOST_URL: "http://<person1-ip>:9000"  # replace once Person 1 gives it
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo "📦 Installing unzip, wget, and other dependencies..."
+      - apt-get update -y
+      - apt-get install -y unzip wget
+      - echo "⬇️ Downloading SonarScanner CLI..."
+      - wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.10.0.3371-linux.zip
+      - unzip -q sonar-scanner-cli-4.10.0.3371-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-4.10.0.3371-linux/bin
+      - sonar-scanner --version || true
+
+  pre_build:
+    commands:
+      - echo "🧹 Preparing for SonarQube scan..."
+      - ls -la
+
+  build:
+    commands:
+      - echo "🚀 Running SonarQube analysis..."
+      - sonar-scanner \
+          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
