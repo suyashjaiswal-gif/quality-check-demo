@@ -4,14 +4,16 @@ env:
   secrets-manager:
     SONAR_TOKEN: "/project/sonar/token:SONAR_TOKEN"
   variables:
-    SONAR_PROJECT_KEY: "node-demo-app"
+    SONAR_PROJECT_KEY: "node-demo-app"   # ✅ Must match sonar-project.properties
     SONAR_HOST_URL: "http://13.233.63.80:9000"
 
 phases:
   install:
     runtime-versions:
-      python: 3.9
+      nodejs: 18   # ✅ Add Node.js for Jest to run
     commands:
+      - echo "📦 Installing dependencies..."
+      - npm install
       - echo "📦 Installing unzip, wget, Java (needed for SonarScanner)..."
       - apt-get update -y
       - apt-get install -y unzip wget default-jre
@@ -24,13 +26,12 @@ phases:
       - echo "✅ Adding SonarScanner to PATH..."
       - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
       - sonar-scanner --version
-      - echo "✅ Preparing for SonarQube scan..."
+      - echo "✅ Environment ready. Project files:"
       - ls -la
 
   build:
     commands:
-      - echo "🧪 Running tests and generating coverage..."
-      - npm install
+      - echo "🧪 Running Jest tests and generating coverage..."
       - npm test -- --coverage
       - echo "📄 Checking for coverage report..."
       - ls -la coverage || echo "⚠️ Coverage folder missing!"
