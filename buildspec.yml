@@ -4,7 +4,7 @@ env:
   secrets-manager:
     SONAR_TOKEN: "/project/sonar/token:SONAR_TOKEN"
   variables:
-    SONAR_PROJECT_KEY: "irrigation-iot-ai"
+    SONAR_PROJECT_KEY: "node-demo-app"
     SONAR_HOST_URL: "http://13.233.63.80:9000"
 
 phases:
@@ -27,25 +27,25 @@ phases:
       - echo "✅ Preparing for SonarQube scan..."
       - ls -la
 
-build:
-  commands:
-    - echo "🧪 Running tests and generating coverage..."
-    - npm test -- --coverage || true          # ✅ Run tests and generate coverage
-    - echo "🚀 Running SonarQube analysis..."
-    - |
-      sonar-scanner \
-        -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-        -Dsonar.sources=. \
-        -Dsonar.exclusions=**/node_modules/**,**/tests/** \
-        -Dsonar.tests=tests \
-        -Dsonar.test.inclusions=tests/**/*.test.js \
-        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-        -Dsonar.host.url=$SONAR_HOST_URL \
-        -Dsonar.login=$SONAR_TOKEN
-
+  build:
+    commands:
+      - echo "🧪 Running tests and generating coverage..."
+      - npm install
+      - npm test -- --coverage
+      - echo "📄 Checking for coverage report..."
+      - ls -la coverage || echo "⚠️ Coverage folder missing!"
+      - echo "🚀 Running SonarQube analysis..."
+      - |
+        sonar-scanner \
+          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          -Dsonar.sources=. \
+          -Dsonar.tests=tests \
+          -Dsonar.test.inclusions=tests/**/*.test.js \
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
 
 artifacts:
   files:
     - '**/*'
   discard-paths: yes
-
