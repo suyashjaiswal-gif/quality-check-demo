@@ -13,7 +13,7 @@ app.get("/status", (req, res) => {
 // Start server and store in variable
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log("Testing");
+  console.log("Testing your code");
 });
 
 // Export the server for testing
