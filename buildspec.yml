@@ -5,25 +5,25 @@ env:
     SONAR_TOKEN: "/project/sonar/token:SONAR_TOKEN"
   variables:
     SONAR_PROJECT_KEY: "irrigation-iot-ai"
-    SONAR_HOST_URL: "http://13.233.63.80:9000"  # replace once Person 1 gives it
+    SONAR_HOST_URL: "http://13.233.63.80:9000"
 
 phases:
- install:
-  runtime-versions:
-    python: 3.9
-  commands:
-    - echo "📦 Installing unzip, wget, and other dependencies..."
-    - apt-get update -y
-    - apt-get install -y unzip wget
-    - echo "⬇️ Downloading SonarScanner CLI..."
-    - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-    - unzip -q sonar-scanner-cli-5.0.1.3006-linux.zip
-    - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
-    - sonar-scanner --version || true
-    
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo "📦 Installing unzip, wget, and other dependencies..."
+      - apt-get update -y
+      - apt-get install -y unzip wget default-jre
+      - echo "⬇️ Downloading SonarScanner CLI..."
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      - unzip -q sonar-scanner-cli-5.0.1.3006-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
+      - sonar-scanner --version || true
+
   pre_build:
     commands:
-      - echo "🧹 Preparing for SonarQube scan..."
+      - echo "✅ Preparing for SonarQube scan..."
       - ls -la
 
   build:
