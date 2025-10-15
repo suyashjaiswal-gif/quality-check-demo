@@ -12,24 +12,26 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - echo "📦 Installing unzip, wget, and other dependencies..."
+      - echo "📦 Installing unzip, wget, Java (needed for SonarScanner)..."
       - apt-get update -y
       - apt-get install -y unzip wget default-jre
       - echo "⬇️ Downloading SonarScanner CLI..."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
       - unzip -q sonar-scanner-cli-5.0.1.3006-linux.zip
-      - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
-      - sonar-scanner --version || true
 
   pre_build:
     commands:
+      - echo "✅ Adding SonarScanner to PATH..."
+      - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
+      - sonar-scanner --version
       - echo "✅ Preparing for SonarQube scan..."
       - ls -la
 
   build:
-    commands:
+    commands: 
       - echo "🚀 Running SonarQube analysis..."
-      - sonar-scanner \
+      - |
+        sonar-scanner \
           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
           -Dsonar.sources=. \
           -Dsonar.host.url=$SONAR_HOST_URL \
