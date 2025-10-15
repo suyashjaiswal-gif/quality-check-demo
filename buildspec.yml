@@ -27,17 +27,25 @@ phases:
       - echo "✅ Preparing for SonarQube scan..."
       - ls -la
 
-  build:
-    commands: 
-      - echo "🚀 Running SonarQube analysis..."
-      - |
-        sonar-scanner \
-          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN
+build:
+  commands:
+    - echo "🧪 Running tests and generating coverage..."
+    - npm test -- --coverage || true          # ✅ Run tests and generate coverage
+    - echo "🚀 Running SonarQube analysis..."
+    - |
+      sonar-scanner \
+        -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+        -Dsonar.sources=. \
+        -Dsonar.exclusions=**/node_modules/**,**/tests/** \
+        -Dsonar.tests=tests \
+        -Dsonar.test.inclusions=tests/**/*.test.js \
+        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+        -Dsonar.host.url=$SONAR_HOST_URL \
+        -Dsonar.login=$SONAR_TOKEN
+
 
 artifacts:
   files:
     - '**/*'
   discard-paths: yes
+
