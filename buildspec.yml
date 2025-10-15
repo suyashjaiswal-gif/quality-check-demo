@@ -4,7 +4,7 @@ env:
   secrets-manager:
     SONAR_TOKEN: "/project/sonar/token:SONAR_TOKEN"
   variables:
-    SONAR_PROJECT_KEY: "node-demo-app"        # must match sonar-project.properties
+    SONAR_PROJECT_KEY: "node-demo-app"
     SONAR_HOST_URL: "http://13.233.63.80:9000"
 
 phases:
@@ -26,10 +26,9 @@ phases:
   pre_build:
     commands:
       - echo "🧪 Running Jest tests and generating coverage..."
-      # ✅ Continue even if tests fail
       - npm test -- --coverage || echo "⚠️ Jest tests failed, continuing SonarQube analysis..."
       - echo "📁 Checking coverage directory..."
-      - ls -la coverage || echo "⚠️ Coverage folder not found — Sonar will still analyze sources."
+      - find coverage -name "lcov.info" || echo "⚠️ No coverage report found."
 
   build:
     commands:
@@ -40,6 +39,7 @@ phases:
           -Dsonar.sources=. \
           -Dsonar.tests=tests \
           -Dsonar.test.inclusions=tests/**/*.test.js \
+          -Dsonar.exclusions=**/node_modules/** \
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
           -Dsonar.sourceEncoding=UTF-8 \
           -Dsonar.host.url=$SONAR_HOST_URL \
