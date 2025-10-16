@@ -1,5 +1,5 @@
 const request = require("supertest");
-const server = require("../src/index"); // import the exported server
+const server = require("../index"); // import the exported server
 
 describe("Basic API Tests", () => {
 
