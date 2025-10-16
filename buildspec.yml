@@ -36,7 +36,7 @@ phases:
       - |
         sonar-scanner \
           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.sources=src \
+          -Dsonar.sources=. \
           -Dsonar.tests=tests \
           -Dsonar.test.inclusions=tests/**/*.test.js \
           -Dsonar.exclusions=**/node_modules/**,**/coverage/** \
@@ -49,3 +49,4 @@ artifacts:
   files:
     - '**/*'
   discard-paths: yes
+
