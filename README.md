@@ -1,6 +1,6 @@
 # quality-check-demo
 Quality check repository
-Test
+Test!
 
 # NodeJS SonarQube Demo App
 
